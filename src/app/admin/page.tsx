@@ -53,10 +53,13 @@ export default async function AdminDashboard() {
     where: { updatedAt: { gte: dayAgo } },
   });
 
+  type DomainEvent = (typeof domainEvents)[number];
+  type CategoryEvent = (typeof categoryEvents)[number];
+
   const topDomains = sortByClicks(
     domainEvents
-      .filter((entry) => entry.domain)
-      .map((entry) => ({
+      .filter((entry: DomainEvent) => entry.domain)
+      .map((entry: DomainEvent) => ({
         label: entry.domain as string,
         clicks: entry._count.domain,
       }))
@@ -64,8 +67,8 @@ export default async function AdminDashboard() {
 
   const topCategories = sortByClicks(
     categoryEvents
-      .filter((entry) => entry.category)
-      .map((entry) => ({
+      .filter((entry: CategoryEvent) => entry.category)
+      .map((entry: CategoryEvent) => ({
         label: entry.category as string,
         clicks: entry._count.category,
       }))
