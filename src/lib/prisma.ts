@@ -8,19 +8,13 @@ if (!process.env.PRISMA_CLIENT_ENGINE_TYPE) {
   process.env.PRISMA_CLIENT_ENGINE_TYPE = "library";
 }
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is not set. Update .env with your Postgres URL.");
-}
-
 const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is not set.");
-}
-
-const useAccelerate = databaseUrl.startsWith("prisma+postgres://");
+const useAccelerate = Boolean(
+  databaseUrl && databaseUrl.startsWith("prisma+postgres://")
+);
 const prisma =
   globalThis.prisma ??
-  (useAccelerate
+  (useAccelerate && databaseUrl
     ? new PrismaClient({ accelerateUrl: databaseUrl })
     : new PrismaClient());
 
