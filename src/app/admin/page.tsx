@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +27,7 @@ export default async function AdminDashboard() {
     );
   }
 
+  const prisma = getPrisma();
   const [users, sessions, timeSpent, domainEvents, categoryEvents] = await Promise.all([
     prisma.user.count(),
     prisma.analyticsEvent.count({ where: { type: "session_start" } }),

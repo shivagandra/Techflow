@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 type Payload = {
   type: "session_start" | "session_end" | "open";
@@ -13,6 +13,7 @@ type Payload = {
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   const body = (await request.json()) as Payload;
+  const prisma = getPrisma();
 
   await prisma.analyticsEvent.create({
     data: {

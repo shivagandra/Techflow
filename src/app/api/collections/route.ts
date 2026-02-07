@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 const ensureDefaults = async (userId: string) => {
+  const prisma = getPrisma();
   const existing = await prisma.collection.findMany({
     where: { userId },
     include: { items: true },
@@ -62,6 +63,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
 
+  const prisma = getPrisma();
   const collection = await prisma.collection.create({
     data: {
       name: body.name,

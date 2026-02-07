@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 type Body = {
   articleId: string;
@@ -20,6 +20,7 @@ export async function POST(
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const prisma = getPrisma();
 
   const collection = await prisma.collection.findFirst({
     where: { id, userId: session.user.id },
@@ -63,6 +64,7 @@ export async function DELETE(
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const prisma = getPrisma();
 
   const collection = await prisma.collection.findFirst({
     where: { id, userId: session.user.id },

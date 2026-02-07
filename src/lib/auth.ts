@@ -1,7 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 const adminEmails = (process.env.ADMIN_EMAILS || "")
   .split(",")
@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      const prisma = getPrisma();
       if (user?.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email },
@@ -31,6 +32,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async signIn({ user }) {
+      const prisma = getPrisma();
       if (!user.email) return false;
       if (adminEmails.includes(user.email.toLowerCase())) {
         await prisma.user.upsert({
@@ -54,6 +56,7 @@ export const authOptions: NextAuthOptions = {
         if (token?.role) {
           session.user.role = token.role;
         } else if (user?.id) {
+          const prisma = getPrisma();
           const dbUser = await prisma.user.findUnique({
             where: { id: user.id },
             select: { role: true },
