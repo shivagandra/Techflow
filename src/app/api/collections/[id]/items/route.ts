@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -12,16 +12,17 @@ type Body = {
 };
 
 export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const collection = await prisma.collection.findFirst({
-    where: { id: params.id, userId: session.user.id },
+    where: { id, userId: session.user.id },
   });
   if (!collection) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -35,12 +36,12 @@ export async function POST(
   await prisma.collectionItem.upsert({
     where: {
       collectionId_articleId: {
-        collectionId: params.id,
+        collectionId: id,
         articleId: body.articleId,
       },
     },
     create: {
-      collectionId: params.id,
+      collectionId: id,
       articleId: body.articleId,
       title: body.title,
       url: body.url,
@@ -54,16 +55,17 @@ export async function POST(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const collection = await prisma.collection.findFirst({
-    where: { id: params.id, userId: session.user.id },
+    where: { id, userId: session.user.id },
   });
   if (!collection) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -76,7 +78,7 @@ export async function DELETE(
 
   await prisma.collectionItem.deleteMany({
     where: {
-      collectionId: params.id,
+      collectionId: id,
       articleId: body.articleId,
     },
   });
