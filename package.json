@@ -1,0 +1,37 @@
+{
+  "name": "techflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next dev",
+    "build": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next build",
+    "start": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next start",
+    "lint": "eslint",
+    "db:check": "powershell -ExecutionPolicy Bypass -File scripts/check-postgres.ps1"
+  },
+  "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.7",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.2.3",
+    "next": "16.1.6",
+    "next-auth": "^4.24.13",
+    "pg": "^8.18.0",
+    "prisma": "^7.3.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "rss-parser": "^3.13.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.16.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
