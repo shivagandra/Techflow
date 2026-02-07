@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next dev",
     "build": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next build",
     "start": "set PRISMA_CLIENT_ENGINE_TYPE=library&& next start",
