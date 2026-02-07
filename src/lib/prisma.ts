@@ -20,7 +20,9 @@ if (!databaseUrl) {
 const useAccelerate = databaseUrl.startsWith("prisma+postgres://");
 const prisma =
   globalThis.prisma ??
-  new PrismaClient(useAccelerate ? { accelerateUrl: databaseUrl } : {});
+  (useAccelerate
+    ? new PrismaClient({ accelerateUrl: databaseUrl })
+    : new PrismaClient());
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = prisma;
