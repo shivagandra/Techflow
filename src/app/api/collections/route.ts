@@ -10,7 +10,10 @@ const ensureDefaults = async (userId: string) => {
   });
 
   const defaults = ["Saved", "Learning", "To Watch"];
-  const existingNames = new Set(existing.map((collection) => collection.name));
+  type ExistingCollection = (typeof existing)[number];
+  const existingNames = new Set(
+    existing.map((collection: ExistingCollection) => collection.name)
+  );
   const missing = defaults.filter((name) => !existingNames.has(name));
 
   if (missing.length === 0) return existing;
