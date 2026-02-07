@@ -41,11 +41,13 @@ export async function GET() {
 
   const collections = await ensureDefaults(session.user.id);
 
+  type CollectionWithItems = (typeof collections)[number];
+  type CollectionItem = CollectionWithItems["items"][number];
   return NextResponse.json(
-    collections.map((collection) => ({
+    collections.map((collection: CollectionWithItems) => ({
       id: collection.id,
       name: collection.name,
-      itemIds: collection.items.map((item) => item.articleId),
+      itemIds: collection.items.map((item: CollectionItem) => item.articleId),
     }))
   );
 }
